@@ -2,12 +2,12 @@ pipeline {
   agent any
 
   stages {
-       stage('Build Artifact') {
-            steps {
-              sh "mvn clean package -DskipTests=true"
-              archive 'target/*.jar' //so that they can be downloaded later
-            }
-        }
+        stage('Build Artifact') {
+              steps {
+                sh "mvn clean package -DskipTests=true"
+                archive 'target/*.jar' //so that they can be downloaded later
+              }
+          }
 
         stage('Unit test and Jacoco Coverage') {
             steps {
@@ -19,6 +19,12 @@ pipeline {
                 jacoco execPattern: "target/jacoco.exe"
               }
             }
-        }   
+        } 
+
+        stage('Build docker and push') {
+              steps {
+                sh "printenv"
+              }
+          }          
     }
 }
