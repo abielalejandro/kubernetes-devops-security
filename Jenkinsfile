@@ -35,7 +35,8 @@ pipeline {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
                   sh "printenv"
-                  sh "envsubst < k8s_deployment_service.yaml"
+                  sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
+                  sh "cat k8s_deployment_service.yaml"
                 }
               }
           }                     

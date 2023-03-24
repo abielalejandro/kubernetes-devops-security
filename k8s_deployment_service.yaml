@@ -16,7 +16,7 @@ spec:
         app: devsecops
     spec:
       containers:
-      - image: rjgc2810/kubernetes-devops-security:${GIT_COMMIT}
+      - image: rjgc2810/kubernetes-devops-security:GIT_COMMIT
         name: devsecops-container
 ---
 apiVersion: v1
