@@ -24,8 +24,8 @@ pipeline {
         stage('Build docker and push') {
               steps {
                 sh "printenv"
-                sh "docker build -t rjgc2810/kubernetes-devops-security:$GIT_COMMIT ."
-                sh "docker push rjgc2810/kubernetes-devops-security:$GIT_COMMIT ."
+                sh "docker build -t rjgc2810/kubernetes-devops-security:latest -t rjgc2810/kubernetes-devops-security:$GIT_COMMIT ."
+                sh "docker push rjgc2810/kubernetes-devops-security:$GIT_COMMIT"
               }
           }          
     }
