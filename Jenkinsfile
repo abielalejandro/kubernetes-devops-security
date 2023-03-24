@@ -23,7 +23,7 @@ pipeline {
 
         stage('Build docker and push') {
               steps {
-                withDockerRegistry(credentialsId: "docker-github", url: "") {
+                withDockerRegistry(credentialsId: "docker-hub", url: "") {
                   sh "printenv"
                   sh "docker build -t rjgc2810/kubernetes-devops-security:latest -t rjgc2810/kubernetes-devops-security:$GIT_COMMIT ."
                   sh "docker push rjgc2810/kubernetes-devops-security:$GIT_COMMIT"
