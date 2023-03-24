@@ -38,7 +38,7 @@ pipeline {
                   sh 'chmod u+x kubectl'
                   sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
                   sh "cat k8s_deployment_service.yaml"
-                  sh "./kubectl get pods"
+                  sh "./kubectl apply -f k8s_deployment_service.yaml"
                 }
               }
           }                     
