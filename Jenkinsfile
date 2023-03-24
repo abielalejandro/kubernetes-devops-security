@@ -33,10 +33,10 @@ pipeline {
 
         stage('Deploy to k8s') {
               steps {
-                withDockerRegistry(credentialsId: "docker-hub", url: "") {
-                  sh "printenv"
+                withKubeConfig(credentialsId: "kubeconfig", serverUrl: "https://72.167.54.159:16443") {
                   sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
                   sh "cat k8s_deployment_service.yaml"
+                  sh "kubectl get pods"
                 }
               }
           }                     
