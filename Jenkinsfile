@@ -21,7 +21,13 @@ pipeline {
             }
         } 
 
-        stage('Build docker and push') {
+        stage('Unit test and Jacoco Coverage') {
+            steps {
+              sh "mvn test-compile org.pitest:pitest-maven:mutationCoverage"
+            }
+        } 
+
+        /*stage('Build docker and push') {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
                   sh "printenv"
@@ -41,6 +47,6 @@ pipeline {
                   sh "./kubectl apply -f k8s_deployment_service.yaml"
                 }
               }
-          }                     
+          }  */                   
     }
 }

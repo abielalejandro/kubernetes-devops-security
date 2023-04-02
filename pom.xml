@@ -65,6 +65,14 @@
 						</execution>
 				</executions>				
 			</plugin>
+			<plugin>
+				<groupId>org.pitest</groupId>
+				<artifactId>pitest-maven</artifactId>
+				<version>LATEST</version>
+				<configurations>
+					<mutationThreshold>70</mutationThreshold>
+				</configurations>
+			</plugin>			
 		</plugins>
 	</build>
 
