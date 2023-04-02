@@ -21,7 +21,7 @@ pipeline {
             }
         } 
 
-        stage('Unit test and Jacoco Coverage') {
+        stage('Mutation test') {
             steps {
               sh "mvn test-compile org.pitest:pitest-maven:mutationCoverage"
             }
