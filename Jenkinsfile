@@ -33,7 +33,7 @@ pipeline {
 
         stage('Deploy to k8s') {
               steps {
-                withKubeConfig(credentialsId: "kubeconfig", serverUrl: "https://72.167.54.159:16443") {
+                withKubeConfig(credentialsId: "kubeconfig", serverUrl: "https://192.168.0.8:16443") {
                   sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
                   sh 'chmod u+x kubectl'
                   sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
