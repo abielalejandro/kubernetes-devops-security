@@ -23,7 +23,7 @@ pipeline {
 
         stage('Mutation test') {
             steps {
-              sh "mvn test-compile org.pitest:pitest-maven:mutationCoverage"
+              sh "mvn clean test-compile org.pitest:pitest-maven:mutationCoverage"
             }
         } 
 
