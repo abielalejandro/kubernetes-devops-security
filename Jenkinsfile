@@ -33,7 +33,7 @@ pipeline {
               sh '''
                 mvn clean verify sonar:sonar \
                   -Dsonar.projectKey=numeric \
-                  -Dsonar.host.url=http://localhost:9000 \
+                  -Dsonar.host.url=http://192.168.0.8:9000 \
                   -Dsonar.login=sqp_1cdf424379935ec323f20979baceb765378f0da3
               '''
             }
