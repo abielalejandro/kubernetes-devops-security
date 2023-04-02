@@ -69,9 +69,9 @@
 				<groupId>org.pitest</groupId>
 				<artifactId>pitest-maven</artifactId>
 				<version>1.11.7</version>
-				<configurations>
+				<configuration>
 					<mutationThreshold>70</mutationThreshold>
-				</configurations>
+				</configuration>
 			</plugin>			
 		</plugins>
 	</build>
