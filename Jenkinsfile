@@ -29,9 +29,10 @@ pipeline {
         } 
 
         stage('Sonarqube SAST') {
-          withSonarQubeEnv(credentialsId: 'sonaqube', installationName: 'My SonarQube Server') { // You can override the credential to be used
+          withSonarQubeEnv(credentialsId: 'sonaqube', installationName: 'My SonarQube Server') {
             sh 'mvn clean verify sonar:sonar'
           }
+        }
 
             /*steps {
               sh '''
@@ -40,10 +41,8 @@ pipeline {
                   -Dsonar.host.url=http://192.168.0.8:9000 \
                   -Dsonar.login=sqp_1cdf424379935ec323f20979baceb765378f0da3
               '''
-            }*/
-        } 
-
-        /*stage('Build docker and push') {
+            }
+        stage('Build docker and push') {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
                   sh "printenv"
