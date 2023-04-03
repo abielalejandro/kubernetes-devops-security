@@ -29,7 +29,7 @@ pipeline {
         } 
 
         stage('Sonarqube SAST') {
-          withSonarQubeEnv(credentialsId: 'sonaqube', installationName: 'My SonarQube Server') {
+          withSonarQubeEnv('Sonarqube') {
             sh 'mvn clean verify sonar:sonar'
           }
         }
