@@ -29,8 +29,10 @@ pipeline {
         } 
 
         stage('Sonarqube SAST') {
-          withSonarQubeEnv('Sonarqube') {
-            sh 'mvn clean verify sonar:sonar'
+          steps {
+            withSonarQubeEnv('Sonarqube') {
+              sh 'mvn clean verify sonar:sonar'
+            }
           }
         }
 
