@@ -71,6 +71,18 @@
             <version>1.8.1</version>
 			<configuration>
 				<mutationThreshold>30</mutationThreshold>
+				<sourceDataFormats>
+					<sourceDataFormat>HTML</sourceDataFormat>
+					<sourceDataFormat>XML</sourceDataFormat>
+				</sourceDataFormats>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>report</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+
 			</configuration>
             <dependencies>
                 <!-- https://mvnrepository.com/artifact/org.pitest/pitest-junit5-plugin -->
@@ -79,7 +91,6 @@
                     <artifactId>pitest-junit5-plugin</artifactId>
                     <version>0.16</version>
                 </dependency>
-
             </dependencies>
         </plugin>
 			<!-- OWASP Dependency Check Maven Plugin. -->

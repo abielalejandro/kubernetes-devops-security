@@ -18,7 +18,7 @@ pipeline {
         stage('Mutation test') {
             steps {
               sh "mvn clean test-compile org.pitest:pitest-maven:mutationCoverage"
-              pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+              pitmutation mutationStatsFile: '**/target/pit-reports/**/index.html'
             }
         } 
 
