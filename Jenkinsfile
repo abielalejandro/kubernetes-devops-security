@@ -41,6 +41,11 @@ pipeline {
           }
         }
 
+        stage('Dependency check') {
+            steps {
+              sh "mvn org.owasp:dependency-check-maven:check"
+            }
+        }
             /*steps {
               sh '''
                 mvn clean verify sonar:sonar \
