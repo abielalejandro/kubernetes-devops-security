@@ -13,6 +13,12 @@ pipeline {
             steps {
               sh "mvn test"
             }
+            post {
+                always{
+                    junit "target/surefire-reports/*.xml"
+                    jacoco execPattern: "target/jacoco.exe"
+                }
+            }
         }
 
         stage('Mutation test') {
@@ -36,6 +42,11 @@ pipeline {
         stage('Dependency check') {
             steps {
               sh "mvn org.owasp:dependency-check-maven:check"
+            }
+            post {
+                always {
+                        dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
+                }
             }
         }
             /*steps {
@@ -67,13 +78,5 @@ pipeline {
                 }
               }
           }  */                   
-    }
-
-    post {
-        always {
-                junit "target/surefire-reports/*.xml"
-                jacoco execPattern: "target/jacoco.exe"
-                dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
-        }
     }
 }
