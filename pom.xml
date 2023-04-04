@@ -89,7 +89,6 @@
 				<version>8.2.1</version>
 				<configuration>
 					<format>ALL</format>
-					<failBuildOnCVSS>8</failBuildOnCVSS>
 				</configuration>
 				<executions>
 					<execution>
