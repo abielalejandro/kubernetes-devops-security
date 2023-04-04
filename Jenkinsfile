@@ -33,6 +33,11 @@ pipeline {
             withSonarQubeEnv('Sonarqube') {
               sh 'mvn clean verify sonar:sonar'
             }
+            timeout(time: 2, unit: 'MINUTES') {
+                script {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
           }
         }
 
