@@ -13,13 +13,7 @@ pipeline {
             steps {
               sh "mvn test"
             }
-            post {
-              always {
-                junit "target/surefire-reports/*.xml"
-                jacoco execPattern: "target/jacoco.exe"
-              }
-            }
-        } 
+        }
 
         stage('Mutation test') {
             steps {
@@ -31,12 +25,7 @@ pipeline {
         stage('Sonarqube SAST') {
           steps {
             withSonarQubeEnv('Sonarqube') {
-              sh 'mvn clean sonar:sonar'
-            }
-            timeout(time: 2, unit: 'MINUTES') {
-                script {
-                    waitForQualityGate abortPipeline: true
-                }
+              sh 'mvn clean compile sonar:sonar'
             }
           }
         }
@@ -44,11 +33,6 @@ pipeline {
         stage('Dependency check') {
             steps {
               sh "mvn dependency-check-maven:check"
-            }
-            post {
-                always {
-                    dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
-                }
             }
         }
             /*steps {
@@ -80,5 +64,14 @@ pipeline {
                 }
               }
           }  */                   
+    }
+
+    post {
+        always {
+                junit "target/surefire-reports/*.xml"
+                jacoco execPattern: "target/jacoco.exe"
+                waitForQualityGate abortPipeline: true
+                dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
+        }
     }
 }
