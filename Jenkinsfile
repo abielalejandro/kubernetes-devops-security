@@ -18,6 +18,7 @@ pipeline {
         stage('Mutation test') {
             steps {
               sh "mvn clean test-compile org.pitest:pitest-maven:mutationCoverage"
+              archive 'target/pit-reports/**/*.html'
             }
         } 
 
@@ -25,6 +26,9 @@ pipeline {
           steps {
             withSonarQubeEnv('Sonarqube') {
               sh 'mvn clean compile sonar:sonar'
+            }
+            timeout(time: 2, unit: "Minutes") {
+                waitForQualityGate abortPipeline: true
             }
           }
         }
@@ -69,7 +73,6 @@ pipeline {
         always {
                 junit "target/surefire-reports/*.xml"
                 jacoco execPattern: "target/jacoco.exe"
-                waitForQualityGate abortPipeline: true
                 dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
         }
     }
