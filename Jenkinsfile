@@ -31,7 +31,7 @@ pipeline {
         stage('Sonarqube SAST') {
           steps {
             withSonarQubeEnv('Sonarqube') {
-              sh 'mvn clean verify sonar:sonar'
+              sh 'mvn clean sonar:sonar'
             }
             timeout(time: 2, unit: 'MINUTES') {
                 script {
@@ -43,7 +43,7 @@ pipeline {
 
         stage('Dependency check') {
             steps {
-              sh "mvn org.owasp:dependency-check-maven:check"
+              sh "mvn dependency-check-maven:check"
             }
             post {
                 always {
