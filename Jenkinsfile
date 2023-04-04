@@ -32,7 +32,7 @@ pipeline {
 
         stage('Dependency check') {
             steps {
-              sh "mvn dependency-check-maven:check"
+              sh "mvn org.owasp:dependency-check-maven:check"
             }
         }
             /*steps {
