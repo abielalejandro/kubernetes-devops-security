@@ -41,7 +41,7 @@ pipeline {
 
         stage('Vulnerabilities scan') {
             steps {
-                paralell(
+                parallel(
                     "Dependency check": {
                         sh "mvn org.owasp:dependency-check-maven:check"
                     },
