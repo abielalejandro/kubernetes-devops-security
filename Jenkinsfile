@@ -49,7 +49,7 @@ pipeline {
                         sh "bash vulnerability-scan.sh"
                     },
                     "OPA Confest": {
-                        sh "docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile"
+                        sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-docker-security.rego Dockerfile'
                     }
                 )
 
