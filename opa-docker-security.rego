@@ -80,6 +80,7 @@ forbidden_users = [
 
 deny[msg] {
     command := "user"
+    i :=0
     users := [name | input[i].Cmd == "user"; name := input[i].Value]
     lastuser := users[count(users)-1]
     contains(lower(lastuser[_]), forbidden_users[_])
