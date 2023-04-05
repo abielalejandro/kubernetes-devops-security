@@ -44,7 +44,7 @@ pipeline {
                 paralell(
                     "Dependency check": {
                         sh "mvn org.owasp:dependency-check-maven:check"
-                    }
+                    },
                     "Image scan": {
                         sh "bash vulnerability-scan.sh"
                     }
