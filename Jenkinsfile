@@ -60,14 +60,7 @@ pipeline {
                 }
             }
         }
-            /*steps {
-              sh '''
-                mvn clean verify sonar:sonar \
-                  -Dsonar.projectKey=numeric \
-                  -Dsonar.host.url=http://192.168.0.8:9000 \
-                  -Dsonar.login=sqp_1cdf424379935ec323f20979baceb765378f0da3
-              '''
-            }
+
         stage('Build docker and push') {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
@@ -88,6 +81,6 @@ pipeline {
                   sh "./kubectl apply -f k8s_deployment_service.yaml"
                 }
               }
-          }  */                   
+          }
     }
 }
