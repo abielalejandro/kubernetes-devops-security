@@ -65,6 +65,7 @@ pipeline {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
                   sh "printenv"
+                  sh "mvn clean package -DskipTests=true"
                   sh "docker build -t rjgc2810/kubernetes-devops-security:$GIT_COMMIT ."
                   sh "docker push rjgc2810/kubernetes-devops-security:$GIT_COMMIT"
                 }
