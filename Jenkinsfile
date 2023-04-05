@@ -28,7 +28,7 @@ pipeline {
             }
         } 
 
-        stage('Sonarqube SAST') {
+        stage('Sonarqube - SAST') {
           steps {
             withSonarQubeEnv('Sonarqube') {
               sh 'mvn clean compile sonar:sonar'
@@ -39,9 +39,17 @@ pipeline {
           }
         }
 
-        stage('Dependency check') {
+        stage('Vulnerabilities scan') {
             steps {
-              sh "mvn org.owasp:dependency-check-maven:check"
+                paralell(
+                    "Dependency check": {
+                        sh "mvn org.owasp:dependency-check-maven:check"
+                    }
+                    "Image scan": {
+                        sh "bash vulnerability-scan.sh"
+                    }
+                )
+
             }
             post {
                 always {
