@@ -81,12 +81,15 @@ pipeline {
           } 
         }
 
+        stage("Download kubectl client") {
+          sh "bash download-kubectl.sh"
+        }
+
         stage('Deploy to k8s') {
               steps {
                   parallel(
                     "Deploy": {
                       withKubeConfig(credentialsId: "kubeconfig") {
-                        sh "bash download-kubectl.sh"
                         sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
                         sh "sed -i 's#APP_NAME#$APP_NAME#g' k8s_deployment_service.yaml"
                         sh "./kubectl apply -f k8s_deployment_service.yaml --record=true"
@@ -95,8 +98,6 @@ pipeline {
                     "Validate running status": {
                       withKubeConfig(credentialsId: "kubeconfig") {
                         sh '''
-                          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-                          chmod u+x kubectl
                           sleep 60s
                           dps=$(kubectl rollout status deployment $APP_NAME --timeout 5)
                           if [[ "$dps" != *"deployment successfully rolled out"* ]];
