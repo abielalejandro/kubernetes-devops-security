@@ -82,7 +82,9 @@ pipeline {
         }
 
         stage("Download kubectl client") {
-          sh "bash download-kubectl.sh"
+          steps {
+            sh "bash download-kubectl.sh"
+          }          
         }
 
         stage('Deploy to k8s') {
