@@ -99,16 +99,7 @@ pipeline {
                     },
                     "Validate running status": {
                       withKubeConfig(credentialsId: "kubeconfig") {
-                        sh '''
-                          sleep 60s
-                          if [[ $(./kubectl rollout status deployment $APP_NAME --timeout 5s) != *"deployment successfully rolled out"* ]];
-                          then
-                            echo "Deployment $APP_NAME rollout status has failed"
-                            ./kubectl rollout undo deployment $APP_NAME
-                          else
-                            echo "Deployment $APP_NAME rollout status is success"
-                          fi;
-                          '''                        
+                        sh 'bash validate.rollout.sh'                        
                       }
                     },
                   )                  
