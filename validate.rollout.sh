@@ -1,5 +1,5 @@
 #!/bin/bash
-
+alias kubectl=./kubectl
 #sleep 60s
 kubectl rollout history deployment "$APP_NAME"
 kubectl rollout status deployment "$APP_NAME" --timeout 10s
