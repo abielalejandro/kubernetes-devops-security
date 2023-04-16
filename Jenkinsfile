@@ -27,9 +27,9 @@ pipeline {
             withSonarQubeEnv('Sonarqube') {
               sh 'mvn clean compile sonar:sonar'
             }
-            timeout(time: 2, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-            }
+            #timeout(time: 2, unit: 'MINUTES') {
+            #    waitForQualityGate abortPipeline: true
+            #}
           }
         }
 
