@@ -95,9 +95,11 @@ pipeline {
                     "Validate running status": {
                       withKubeConfig(credentialsId: "kubeconfig") {
                         sh '''
-                          bash download-kubectl.sh
+                          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                          chmod u+x kubectl
                           sleep 60s
-                          if [[ $(kubectl rollout status deployment $APP_NAME --timeout 5s) != *"deployment successfully rolled out"* ]];
+                          dps=$(kubectl rollout status deployment $APP_NAME --timeout 5)
+                          if [[ "$dps" != *"deployment successfully rolled out"* ]];
                           then
                             echo "Deployment $APP_NAME rollout status has failed"
                             kubectl rollout undo deployment $APP_NAME
