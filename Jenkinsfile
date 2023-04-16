@@ -1,6 +1,8 @@
 pipeline {
   agent any
-
+  environment {
+    APP_NAME = "devsecops"
+  }
   stages {
 
         stage('Unit test and Jacoco Coverage') {
@@ -50,7 +52,7 @@ pipeline {
             }
             post {
                 always {
-                        dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
+                  dependencyCheckPublisher pattern: "target/dependency-check-report.xml"
                 }
             }
         }
@@ -75,18 +77,36 @@ pipeline {
 
         stage('Vulnerabilities scan K8S') {
           steps {
-                   sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+                  sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
           } 
         }
 
         stage('Deploy to k8s') {
               steps {
                 withKubeConfig(credentialsId: "kubeconfig") {
-                  sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-                  sh 'chmod u+x kubectl'
-                  sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
-                  sh "cat k8s_deployment_service.yaml"
-                  sh "./kubectl apply -f k8s_deployment_service.yaml"
+                  parallel(
+                    "Deploy": {
+                      sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                      sh 'chmod u+x kubectl'
+                      sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
+                      sh "sed -i 's#APP_NAME#$APP_NAME#g' k8s_deployment_service.yaml"
+                      sh "./kubectl apply -f k8s_deployment_service.yaml --record=true"
+                    },
+                    "Validate running status": {
+                      sh '''
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                        chmod u+x kubectl
+                        sleep 60s
+                        if [[ $(kubectl rollout status deployment $APP_NAME --timeout 5s) != *"deployment successfully rolled out"* ]];
+                        then
+                           echo "Deployment $APP_NAME rollout status has failed"
+                           kubectl rollout undo deployment $APP_NAME
+                        else
+                          echo "Deployment $APP_NAME rollout status is success"
+                        fi;
+                        '''
+                    },
+                  )                  
                 }
               }
           }
