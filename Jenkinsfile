@@ -101,7 +101,7 @@ pipeline {
                       withKubeConfig(credentialsId: "kubeconfig") {
                         sh '''
                           sleep 60s
-                          ./kubectl rollout status deployment $APP_NAME --timeout 5 > status.log
+                          ./kubectl rollout status deployment $APP_NAME --timeout 5s > status.log
                           cat status.log
                           if [[ ${cat status.log} != *"deployment successfully rolled out"* ]];
                           then
