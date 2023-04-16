@@ -83,31 +83,31 @@ pipeline {
 
         stage('Deploy to k8s') {
               steps {
-                withKubeConfig(credentialsId: "kubeconfig") {
                   parallel(
                     "Deploy": {
-                      sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-                      sh 'chmod u+x kubectl'
-                      sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
-                      sh "sed -i 's#APP_NAME#$APP_NAME#g' k8s_deployment_service.yaml"
-                      sh "./kubectl apply -f k8s_deployment_service.yaml --record=true"
+                      withKubeConfig(credentialsId: "kubeconfig") {
+                        sh "bash download-kubectl.sh"
+                        sh "sed -i 's#GIT_COMMIT#$GIT_COMMIT#g' k8s_deployment_service.yaml"
+                        sh "sed -i 's#APP_NAME#$APP_NAME#g' k8s_deployment_service.yaml"
+                        sh "./kubectl apply -f k8s_deployment_service.yaml --record=true"
+                      }
                     },
                     "Validate running status": {
-                      sh '''
-                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-                        chmod u+x kubectl
-                        sleep 60s
-                        if [[ $(kubectl rollout status deployment $APP_NAME --timeout 5s) != *"deployment successfully rolled out"* ]];
-                        then
-                           echo "Deployment $APP_NAME rollout status has failed"
-                           kubectl rollout undo deployment $APP_NAME
-                        else
-                          echo "Deployment $APP_NAME rollout status is success"
-                        fi;
-                        '''
+                      withKubeConfig(credentialsId: "kubeconfig") {
+                        sh '''
+                          bash download-kubectl.sh
+                          sleep 60s
+                          if [[ $(kubectl rollout status deployment $APP_NAME --timeout 5s) != *"deployment successfully rolled out"* ]];
+                          then
+                            echo "Deployment $APP_NAME rollout status has failed"
+                            kubectl rollout undo deployment $APP_NAME
+                          else
+                            echo "Deployment $APP_NAME rollout status is success"
+                          fi;
+                          '''                        
+                      }
                     },
                   )                  
-                }
               }
           }
     }
