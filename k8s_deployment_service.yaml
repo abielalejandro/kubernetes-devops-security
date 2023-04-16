@@ -17,8 +17,10 @@ spec:
         app: devsecops
     spec:
       containers:
-      - image: rjgc2810/kubernetes-devops-security:GIT_COMMIT
-        name: devsecops-container
+        - image: rjgc2810/kubernetes-devops-security:GIT_COMMIT
+          name: devsecops-container
+          securityContext:
+            runAsNonRoot: true
 ---
 apiVersion: v1
 kind: Service
@@ -29,9 +31,9 @@ metadata:
   namespace: gravity
 spec:
   ports:
-  - port: 8080
-    protocol: TCP
-    targetPort: 8080
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
   selector:
     app: devsecops
   type: NodePort
