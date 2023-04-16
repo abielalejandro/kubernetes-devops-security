@@ -2,16 +2,10 @@ pipeline {
   agent any
 
   stages {
-        stage('Build Artifact') {
-              steps {
-                sh "mvn clean package -DskipTests=true"
-                archive 'target/*.jar' //so that they can be downloaded later
-              }
-          }
 
         stage('Unit test and Jacoco Coverage') {
             steps {
-              sh "mvn test"
+              sh "mvn clean test"
             }
             post {
                 always{
@@ -61,6 +55,13 @@ pipeline {
             }
         }
 
+        stage('Build Artifact') {
+              steps {
+                sh "mvn clean package -DskipTests=true"
+                archive 'target/*.jar' //so that they can be downloaded later
+              }
+        }
+
         stage('Build docker and push') {
               steps {
                 withDockerRegistry(credentialsId: "docker-hub", url: "") {
@@ -71,6 +72,12 @@ pipeline {
                 }
               }
           }
+
+        stage('Vulnerabilities scan K8S') {
+          steps {
+                   sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+          } 
+        }
 
         stage('Deploy to k8s') {
               steps {
