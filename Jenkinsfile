@@ -82,17 +82,28 @@ pipeline {
                   sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
                   },
                 "Kubesec": {
-                    sh 'docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml'
+                     sh ''' 
+                       valid=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq '.[0].valid')
+
+                     sh "score=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq '.[0].score')
+                     if [[ "${score}" -gt 5 ] && ["${valid}" == true]];
+                     then
+                        echo 'Valid k8s file'
+                     else 
+                        echo 'Invalid k8s file'
+                        exit 1
+                     fi
+                     '''
                 }  
              )
           } 
         }
 
-        stage("Download kubectl client") {
-          steps {
-            sh "bash download-kubectl.sh"
-          }          
-        }
+        //stage("Download kubectl client") {
+          //steps {
+            //sh "bash download-kubectl.sh"
+          //}          
+        //}
 
         stage('Deploy to k8s') {
               steps {
