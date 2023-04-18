@@ -16,12 +16,20 @@ spec:
       labels:
         app: APP_NAME
     spec:
+      volumes:
+        - name: vol
+          emptyDir: {}
+      serviceAccountName: default
       containers:
         - image: rjgc2810/kubernetes-devops-security:GIT_COMMIT
           name: APP_NAME-container
+          volumeMounts:
+            - name: vol
+              mountPath: /tmp
           securityContext:
             runAsNonRoot: true
-            runAsUser: 100
+            runAsUser: 10001
+            readOnlyRootFilesystem: true
 ---
 apiVersion: v1
 kind: Service
