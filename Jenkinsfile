@@ -86,7 +86,7 @@ pipeline {
                      valid=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq ".[0].valid")
 
                      score=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq ".[0].score")
-                     if [[ "${score}" -gt 5 ] && [ "${valid}" == true ]];
+                     if [ "${score}" -gt 5 ] && [ "${valid}" == true ]
                      then
                         echo 'Valid k8s file'
                      else 
