@@ -166,4 +166,10 @@ pipeline {
             }
         }  
     }
+
+    post{
+       always{
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'owasp_zap_report', reportFiles: 'zap_report.html', reportName: 'OWASP Zap Report', reportTitles: 'OWASP Zap Report', useWrapperFileDirectly: true])
+       }
+    }
 }
