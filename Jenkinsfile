@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     APP_NAME = "devsecops"
+    APP_URL="http://192.168.0.9:32121"
   }
   stages {
 
@@ -114,7 +115,15 @@ pipeline {
 
         stage('Integration test') {
             steps {
-              sh "mvn clean integration-test"
+              script{
+                   try{
+                      mvn clean integration-test
+                   }catch(e){
+                      withKubeConfig(credentialsId: "kubeconfig") {
+                        sh 'kubectl rollout undo deployment ${APP_NAME}'             
+                      }
+                   }
+              }
             }
         }
 
@@ -136,5 +145,25 @@ pipeline {
                   )                  
               }
           }
+
+        stage('OWASP zap') {
+            steps{
+                sh '''
+                   chmod 777 $(pwd)
+                   docker run -v $(pwd):/zap/wrk/:rw owasp/zap2docker-weekly zap-api-scan.py -t $APP_URL/v3/api-docs -f openapi -r zap_report.html
+                   exit_code=$?
+                   mkdir -p owasp_zap_report
+                   mv zap_report.html owasp_zap_report
+                   if [[ "${exit_code}" -gt 0 ]];
+                   then
+                     echo "OWASP zap has some risk. Check the report"
+                     exit 1;
+                   else 
+                     echo "OWASP zap is ok"
+                   end  
+
+                '''
+            }
+        }  
     }
 }
