@@ -2,7 +2,7 @@ fileignoreconfig:
 - filename: pom.xml
   checksum: 88872fa00f870fe57b615468cdd813142fa6bb8131ca58e4dde8ddecae5f5a98
 - filename: Jenkinsfile
-  checksum: ac326a0b9a915010332f33da1b7e6edbf2a9db6df5f931c28fbbd3bc489f271f
+  checksum: 819b0aceb54a5b229607fcbcd14ef448df6a2897466af49e6ae3ebe7d5de68f8
 - filename: .idea/uiDesigner.xml
   checksum: 146eeae797db9b77bb04bd43a344aea620f5f739914e4e1566b396f9912ee6f4
 version: ""
