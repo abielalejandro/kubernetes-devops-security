@@ -97,7 +97,15 @@ pipeline {
                 },
                 "Trivy scan": {
                     sh '''
-                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.40.0 image --scanners vuln rjgc2810/kubernetes-devops-security:$GIT_COMMIT
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.40.0 image -q --report=summary --severity=CRITICAL,HIGH,MEDIUM,LOW --exit-code=0 --scanners vuln rjgc2810/kubernetes-devops-security:$GIT_COMMIT
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.40.0 image -q --report=summary --severity=CRITICAL --exit-code=1 --scanners vuln rjgc2810/kubernetes-devops-security:$GIT_COMMIT
+                        if [[ $? -gt 0 ]];
+                        then
+                           echo "Trivy scan vulnerabilities found"
+                           exit 1
+                        else
+                           echo "Trivy scan NO vulnerabilities found"
+                        fi
                     '''
                 }
              )
