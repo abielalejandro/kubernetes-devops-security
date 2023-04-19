@@ -150,10 +150,9 @@ pipeline {
             steps{
                 sh '''
                    chmod 777 $(pwd)
-                   docker run -v $(pwd):/zap/wrk/:rw owasp/zap2docker-weekly zap-api-scan.py -t $APP_URL/v3/api-docs -f openapi -r zap_report.html
-                   exit_code=$?
                    mkdir -p owasp_zap_report
-                   mv zap_report.html owasp_zap_report
+                   docker run -v $(pwd):/zap/wrk/:rw owasp/zap2docker-weekly zap-api-scan.py -t $APP_URL/v3/api-docs -f openapi -r owasp_zap_report/zap_report.html
+                   exit_code=$?
                    if [[ "${exit_code}" -gt 0 ]];
                    then
                      echo "OWASP zap has some risk. Check the report"
