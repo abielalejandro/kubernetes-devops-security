@@ -6,7 +6,7 @@ metadata:
   name: APP_NAME
   namespace: gravity
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: APP_NAME
