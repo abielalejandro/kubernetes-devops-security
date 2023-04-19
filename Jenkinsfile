@@ -111,6 +111,13 @@ pipeline {
              )
           } 
         }
+
+        stage('Integration test') {
+            steps {
+              sh "mvn clean integratiion-test"
+            }
+        }
+
         stage('Deploy to k8s') {
               steps {
                   parallel(
