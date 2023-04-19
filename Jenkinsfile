@@ -81,7 +81,7 @@ pipeline {
                 "OPA": {
                   sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
                   },
-                "Kubesec": {
+                "Kubesec Scan": {
                      sh ''' 
                      valid=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq ".[0].valid")
 
@@ -94,17 +94,15 @@ pipeline {
                         exit 1
                      fi
                      '''
-                }  
+                },
+                "Trivy scan": {
+                    sh '''
+                        docker run --rm -v aquasec/trivy:0.40.0 --exit-code 0 image rjgc2810/kubernetes-devops-security:$GIT_COMMIT
+                    '''
+                }
              )
           } 
         }
-
-        //stage("Download kubectl client") {
-          //steps {
-            //sh "bash download-kubectl.sh"
-          //}          
-        //}
-
         stage('Deploy to k8s') {
               steps {
                   parallel(
