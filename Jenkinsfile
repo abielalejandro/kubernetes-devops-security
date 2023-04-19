@@ -114,7 +114,7 @@ pipeline {
 
         stage('Integration test') {
             steps {
-              sh "mvn clean integratiion-test"
+              sh "mvn clean integration-test"
             }
         }
 
