@@ -97,7 +97,7 @@ pipeline {
                 },
                 "Trivy scan": {
                     sh '''
-                        docker run --rm aquasec/trivy:0.40.0 image rjgc2810/kubernetes-devops-security:$GIT_COMMIT
+                        docker run --rm -v $WORKSPACE:/root/.cache/ aquasec/trivy:0.40.0 image --scanners vuln rjgc2810/kubernetes-devops-security:$GIT_COMMIT
                     '''
                 }
              )
